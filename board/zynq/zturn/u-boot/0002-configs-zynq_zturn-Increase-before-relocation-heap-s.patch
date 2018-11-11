@@ -1,0 +1,26 @@
+From 566e1c239dc0d6e8501f9907e5e76fa48ea8a3e6 Mon Sep 17 00:00:00 2001
+From: Xavier Roumegue <xroumegue@gmail.com>
+Date: Sat, 23 Jun 2018 11:12:11 +0200
+Subject: [PATCH 2/3] configs: zynq_zturn: Increase before relocation heap size
+ to 0x800
+
+Signed-off-by: Xavier Roumegue <xroumegue@gmail.com>
+---
+ configs/zynq_z_turn_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configs/zynq_z_turn_defconfig b/configs/zynq_z_turn_defconfig
+index e40afaacf8..0dceaa72c6 100644
+--- a/configs/zynq_z_turn_defconfig
++++ b/configs/zynq_z_turn_defconfig
+@@ -1,6 +1,7 @@
+ CONFIG_ARM=y
+ CONFIG_ARCH_ZYNQ=y
+ CONFIG_SYS_TEXT_BASE=0x4000000
++CONFIG_SYS_MALLOC_F_LEN=0x800
+ CONFIG_SPL=y
+ CONFIG_DEBUG_UART_BASE=0xe0001000
+ CONFIG_DEBUG_UART_CLOCK=50000000
+-- 
+2.19.1
+
