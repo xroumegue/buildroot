@@ -1,0 +1,26 @@
+From 6e5d10bbc680421af8529e81bdb25dfc35585b86 Mon Sep 17 00:00:00 2001
+From: Xavier Roumegue <xroumegue@gmail.com>
+Date: Mon, 15 Oct 2018 21:06:13 +0200
+Subject: [PATCH 3/3] config: zturn:  force bootcmd to tftp
+
+Signed-off-by: Xavier Roumegue <xroumegue@gmail.com>
+---
+ configs/zynq_z_turn_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configs/zynq_z_turn_defconfig b/configs/zynq_z_turn_defconfig
+index 0dceaa72c6..d76631bc0f 100644
+--- a/configs/zynq_z_turn_defconfig
++++ b/configs/zynq_z_turn_defconfig
+@@ -12,7 +12,7 @@ CONFIG_FIT=y
+ CONFIG_FIT_SIGNATURE=y
+ CONFIG_FIT_VERBOSE=y
+ CONFIG_IMAGE_FORMAT_LEGACY=y
+-CONFIG_BOOTCOMMAND="run $modeboot || run distro_bootcmd"
++CONFIG_BOOTCOMMAND="dhcp 192.168.1.4:boot-tftp.img;source"
+ CONFIG_SPL_STACK_R=y
+ CONFIG_SPL_OS_BOOT=y
+ CONFIG_SPL_SPI_LOAD=y
+-- 
+2.19.1
+
