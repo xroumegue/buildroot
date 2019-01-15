@@ -101,6 +101,12 @@ UBOOT_BINS += u-boot.imx
 UBOOT_MAKE_TARGET += u-boot.imx
 endif
 
+ifeq ($(BR2_TARGET_UBOOT_FORMAT_IMX_FIT),y)
+UBOOT_BINS = flash.bin
+UBOOT_MAKE_TARGET += flash.bin
+UBOOT_DEPENDENCIES += firmware-imx
+endif
+
 ifeq ($(BR2_TARGET_UBOOT_FORMAT_SB),y)
 UBOOT_BINS += u-boot.sb
 UBOOT_MAKE_TARGET += u-boot.sb
