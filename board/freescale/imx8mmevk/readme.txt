@@ -5,8 +5,8 @@ Freescale i.MX8MM EVK board
 This file documents the Buildroot support for the Freescale i.MX8MM
 EVK board.
 
-Build
-=====
+Building with NXP ATF, U-Boot and kernel
+========================================
 
 First, configure Buildroot for the i.MX8MM EVK board:
 
@@ -31,6 +31,37 @@ You will find in output/images/ the following files:
   - u-boot.imx
   - u-boot-nodtb.bin
   - u-boot-spl-ddr.bin
+
+Building with mainline ATF, U-Boot and kernel
+=============================================
+First, configure Buildroot for the i.MX8MM EVK board:
+
+  make imx8mmevk_defconfig
+
+Build all components:
+
+  make
+
+You will find in output/images/ the following files:
+    - bl31.bin
+    - bootimage.cfg
+    - boot.vfat
+    - Image
+    - imx8-boot-sd.bin
+    - imx8mm-evk.dtb
+    - lpddr4_pmu_train_fw.bin
+    - rootfs.ext2
+    - rootfs.ext4
+    - rootfs.tar
+    - sdcard.img
+    - signed_hdmi_imx8m.bin
+    - u-boot
+    - u-boot.bin
+    - u-boot.itb
+    - u-boot-nodtb.bin
+    - u-boot-spl
+    - u-boot-spl.bin
+    - u-boot-spl-ddr.bin
 
 Create a bootable SD card
 =========================
