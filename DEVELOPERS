@@ -2714,6 +2714,7 @@ F:	package/gloox/
 
 N:	Xavier Roumegue <xroumegue@gmail.com>
 F:	configs/imx8mmevk_defconfig
+F:	configs/imx8mqevk_defconfig
 
 N:	Yann E. MORIN <yann.morin.1998@free.fr>
 F:	board/friendlyarm/nanopi-neo/
