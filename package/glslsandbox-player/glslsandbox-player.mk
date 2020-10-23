@@ -21,7 +21,6 @@ endif
 
 ifeq ($(BR2_PACKAGE_GLSLSANDBOX_PLAYER_TESTING),y)
 GLSLSANDBOX_PLAYER_CONF_OPTS += \
-	--with-shader-list=shader-tests.list \
 	--enable-testing \
 	--enable-install-testsuite
 else
