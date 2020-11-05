@@ -23,7 +23,7 @@ image sdcard.img {
 
   partition imx-boot {
     in-partition-table = "no"
-    image = "imx8-boot-sd.bin"
+    image = "%UBOOTBIN%"
     offset = %IMXOFFSET%
   }
 
