@@ -36,6 +36,16 @@ define FIRMWARE_IMX_PREPARE_DDR_FW
 		$(FIRMWARE_IMX_DDRFW_DIR)/$(strip $(3)).bin
 endef
 
+ifeq ($(BR2_PACKAGE_FIRMWARE_IMX_DDR_FW_MULTIPLE),y)
+define FIRMWARE_IMX_COPY_DDR_FW
+	cp $(1) $(BINARIES_DIR)/
+endef
+else
+define FIRMWARE_IMX_COPY_DDR_FW
+	true
+endef
+endif
+
 ifeq ($(BR2_PACKAGE_FIRMWARE_IMX_LPDDR4),y)
 FIRMWARE_IMX_DDRFW_DIR = $(@D)/firmware/ddr/synopsys
 
@@ -51,6 +61,7 @@ define FIRMWARE_IMX_INSTALL_IMAGE_DDR_FW
 		$(FIRMWARE_IMX_DDRFW_DIR)/lpddr4_pmu_train_2d_fw.bin > \
 		$(BINARIES_DIR)/lpddr4_pmu_train_fw.bin
 	ln -sf $(BINARIES_DIR)/lpddr4_pmu_train_fw.bin $(BINARIES_DIR)/ddr_fw.bin
+	$(call FIRMWARE_IMX_COPY_DDR_FW, $(FIRMWARE_IMX_DDRFW_DIR)/lpddr4*.bin)
 endef
 endif
 
@@ -69,6 +80,7 @@ define FIRMWARE_IMX_INSTALL_IMAGE_DDR_FW
 		$(FIRMWARE_IMX_DDRFW_DIR)/ddr4_2d_201810_fw.bin > \
 		$(BINARIES_DIR)/ddr4_201810_fw.bin
 	ln -sf $(BINARIES_DIR)/ddr4_201810_fw.bin $(BINARIES_DIR)/ddr_fw.bin
+	$(call FIRMWARE_IMX_COPY_DDR_FW, $(FIRMWARE_IMX_DDRFW_DIR)/ddr4*.bin)
 endef
 endif
 
