@@ -428,6 +428,15 @@ define UBOOT_KCONFIG_FIXUP_CMDS
 	$(UBOOT_ZYNQMP_KCONFIG_PSU_INIT)
 endef
 
+ifeq ($(BR2_TARGET_UBOOT_NEEDS_FW),y)
+define UBOOT_COPY_TARGET_FW
+	$(foreach f,$(BR2_TARGET_UBOOT_FW_FILES), \
+		cp -f $(BINARIES_DIR)/$(call qstrip,$(f)) $(@D)/
+	)
+endef
+UBOOT_PRE_BUILD_HOOKS += UBOOT_COPY_TARGET_FW
+endif
+
 ifeq ($(BR2_TARGET_UBOOT)$(BR_BUILDING),yy)
 
 #
