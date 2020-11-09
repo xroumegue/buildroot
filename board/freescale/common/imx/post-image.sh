@@ -66,7 +66,9 @@ imx_offset()
 
 uboot_image()
 {
-	if grep -Eq "^BR2_TARGET_UBOOT_FORMAT_DTB_IMX=y$" ${BR2_CONFIG}; then
+	if [ -e "${BINARIES_DIR}"/imx8-boot-sd.bin ]; then
+		echo "imx8-boot-sd.bin"
+	elif grep -Eq "^BR2_TARGET_UBOOT_FORMAT_DTB_IMX=y$" ${BR2_CONFIG}; then
 		echo "u-boot-dtb.imx"
 	elif grep -Eq "^BR2_TARGET_UBOOT_FORMAT_IMX=y$" ${BR2_CONFIG}; then
 		echo "u-boot.imx"
