@@ -21,6 +21,10 @@ endef
 #
 # DDR firmware
 #
+ifeq ($(BR2_PACKAGE_FIRMWARE_IMX_NEEDS_DDR_FW),y)
+
+FIRMWARE_IMX_DDR_FW_VERSION = $(call qstrip, $(BR2_PACKAGE_FIRMWARE_IMX_DDR_FW_VERSION))
+FIRMWARE_IMX_DDRFW_DIR = $(@D)/firmware/ddr/synopsys
 
 define FIRMWARE_IMX_PREPARE_DDR_FW
 	$(TARGET_OBJCOPY) -I binary -O binary \
@@ -36,9 +40,30 @@ define FIRMWARE_IMX_PREPARE_DDR_FW
 		$(FIRMWARE_IMX_DDRFW_DIR)/$(strip $(3)).bin
 endef
 
+
+ifeq ($(BR2_PACKAGE_FIRMWARE_IMX_DDR4),y)
+FIRMWARE_IMX_DDR_TYPE=ddr4
+FIRMWARE_IMX_DDR_1D_IMEM_NAME=ddr4_imem_1d$(FIRMWARE_IMX_DDR_FW_VERSION)
+FIRMWARE_IMX_DDR_1D_DMEM_NAME=ddr4_dmem_1d$(FIRMWARE_IMX_DDR_FW_VERSION)
+FIRMWARE_IMX_DDR_2D_IMEM_NAME=ddr4_imem_2d$(FIRMWARE_IMX_DDR_FW_VERSION)
+FIRMWARE_IMX_DDR_2D_DMEM_NAME=ddr4_dmem_2d$(FIRMWARE_IMX_DDR_FW_VERSION)
+else
+ifeq ($(BR2_PACKAGE_FIRMWARE_IMX_LPDDR4),y)
+FIRMWARE_IMX_DDR_TYPE=lpddr4
+FIRMWARE_IMX_DDR_1D_IMEM_NAME=lpddr4_pmu_train_1d_imem$(FIRMWARE_IMX_DDR_FW_VERSION)
+FIRMWARE_IMX_DDR_1D_DMEM_NAME=lpddr4_pmu_train_1d_dmem$(FIRMWARE_IMX_DDR_FW_VERSION)
+FIRMWARE_IMX_DDR_2D_IMEM_NAME=lpddr4_pmu_train_2d_imem$(FIRMWARE_IMX_DDR_FW_VERSION)
+FIRMWARE_IMX_DDR_2D_DMEM_NAME=lpddr4_pmu_train_2d_dmem$(FIRMWARE_IMX_DDR_FW_VERSION)
+
+endif
+endif
+
+
 ifeq ($(BR2_PACKAGE_FIRMWARE_IMX_DDR_FW_MULTIPLE),y)
 define FIRMWARE_IMX_COPY_DDR_FW
-	cp $(1) $(BINARIES_DIR)/
+	$(foreach f, $(1),
+		cp $(FIRMWARE_IMX_DDRFW_DIR)/$(f).bin $(BINARIES_DIR)/$(subst $(FIRMWARE_IMX_DDR_FW_VERSION),,$(f)).bin \
+	)
 endef
 else
 define FIRMWARE_IMX_COPY_DDR_FW
@@ -46,41 +71,31 @@ define FIRMWARE_IMX_COPY_DDR_FW
 endef
 endif
 
-ifeq ($(BR2_PACKAGE_FIRMWARE_IMX_LPDDR4),y)
-FIRMWARE_IMX_DDRFW_DIR = $(@D)/firmware/ddr/synopsys
 
 define FIRMWARE_IMX_INSTALL_IMAGE_DDR_FW
-	# Create padded versions of lpddr4_pmu_* and generate lpddr4_pmu_train_fw.bin.
-	# lpddr4_pmu_train_fw.bin is needed when generating imx8-boot-sd.bin
-	# which is done in post-image script.
-	$(call FIRMWARE_IMX_PREPARE_DDR_FW, \
-		lpddr4_pmu_train_1d_imem,lpddr4_pmu_train_1d_dmem,lpddr4_pmu_train_1d_fw)
-	$(call FIRMWARE_IMX_PREPARE_DDR_FW, \
-		lpddr4_pmu_train_2d_imem,lpddr4_pmu_train_2d_dmem,lpddr4_pmu_train_2d_fw)
-	cat $(FIRMWARE_IMX_DDRFW_DIR)/lpddr4_pmu_train_1d_fw.bin \
-		$(FIRMWARE_IMX_DDRFW_DIR)/lpddr4_pmu_train_2d_fw.bin > \
-		$(BINARIES_DIR)/lpddr4_pmu_train_fw.bin
-	ln -sf $(BINARIES_DIR)/lpddr4_pmu_train_fw.bin $(BINARIES_DIR)/ddr_fw.bin
-	$(call FIRMWARE_IMX_COPY_DDR_FW, $(FIRMWARE_IMX_DDRFW_DIR)/lpddr4*.bin)
-endef
-endif
-
-ifeq ($(BR2_PACKAGE_FIRMWARE_IMX_DDR4),y)
-FIRMWARE_IMX_DDRFW_DIR = $(@D)/firmware/ddr/synopsys
-
-define FIRMWARE_IMX_INSTALL_IMAGE_DDR_FW
-	# Create padded versions of ddr4_* and generate ddr4_fw.bin.
+	# Create padded versions of [lp]ddr4_* and generate ddr_fw.bin.
 	# ddr4_fw.bin is needed when generating imx8-boot-sd.bin
 	# which is done in post-image script.
 	$(call FIRMWARE_IMX_PREPARE_DDR_FW, \
-		ddr4_imem_1d_201810,ddr4_dmem_1d_201810,ddr4_1d_201810_fw)
+		$(FIRMWARE_IMX_DDR_1D_IMEM_NAME), \
+		$(FIRMWARE_IMX_DDR_1D_DMEM_NAME), \
+		$(FIRMWARE_IMX_DDR_TYPE)_1d$(FIRMWARE_IMX_DDR_FW_VERSION)_fw)
 	$(call FIRMWARE_IMX_PREPARE_DDR_FW, \
-		ddr4_imem_2d_201810,ddr4_dmem_2d_201810,ddr4_2d_201810_fw)
-	cat $(FIRMWARE_IMX_DDRFW_DIR)/ddr4_1d_201810_fw.bin \
-		$(FIRMWARE_IMX_DDRFW_DIR)/ddr4_2d_201810_fw.bin > \
-		$(BINARIES_DIR)/ddr4_201810_fw.bin
-	ln -sf $(BINARIES_DIR)/ddr4_201810_fw.bin $(BINARIES_DIR)/ddr_fw.bin
-	$(call FIRMWARE_IMX_COPY_DDR_FW, $(FIRMWARE_IMX_DDRFW_DIR)/ddr4*.bin)
+		$(FIRMWARE_IMX_DDR_2D_IMEM_NAME), \
+		$(FIRMWARE_IMX_DDR_2D_DMEM_NAME), \
+		$(FIRMWARE_IMX_DDR_TYPE)_2d$(FIRMWARE_IMX_DDR_FW_VERSION)_fw)
+	cat $(FIRMWARE_IMX_DDRFW_DIR)/$(FIRMWARE_IMX_DDR_TYPE)_1d$(FIRMWARE_IMX_DDR_FW_VERSION)_fw.bin \
+		$(FIRMWARE_IMX_DDRFW_DIR)/$(FIRMWARE_IMX_DDR_TYPE)_2d$(FIRMWARE_IMX_DDR_FW_VERSION)_fw.bin  > \
+		$(BINARIES_DIR)/$(FIRMWARE_IMX_DDR_TYPE)$(FIRMWARE_IMX_DDR_FW_VERSION)_fw.bin
+	ln -sf \
+		$(BINARIES_DIR)/$(FIRMWARE_IMX_DDR_TYPE)$(FIRMWARE_IMX_DDR_FW_VERSION)_fw.bin \
+		$(BINARIES_DIR)/ddr_fw.bin
+	$(call FIRMWARE_IMX_COPY_DDR_FW, \
+		$(FIRMWARE_IMX_DDR_1D_IMEM_NAME) \
+		$(FIRMWARE_IMX_DDR_1D_DMEM_NAME) \
+		$(FIRMWARE_IMX_DDR_2D_IMEM_NAME) \
+		$(FIRMWARE_IMX_DDR_2D_DMEM_NAME))
+
 endef
 endif
 
