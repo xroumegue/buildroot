@@ -229,6 +229,21 @@ config BR2_TARGET_UBOOT_NEEDS_ATF_BL31_ELF
 
 endchoice
 
+config BR2_TARGET_UBOOT_NEEDS_FW
+	bool "U-Boot needs FW files"
+	help
+	  Some platforms (such as iMX8) requires subsystem firmware
+	  files encapsulated within the u-boot payload such as this
+	  configure properly the memory subystem or those later
+	  require authentication from boot ROM.
+
+config BR2_TARGET_UBOOT_FW_FILES
+	string "Firmware files list"
+	depends on BR2_TARGET_UBOOT_NEEDS_FW
+	help
+	  Specify the list of files to be copied in the u-boot
+	  build directory from the binary folder.
+
 menu "U-Boot binary format"
 
 config BR2_TARGET_UBOOT_FORMAT_AIS
