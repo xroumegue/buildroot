@@ -2684,6 +2684,9 @@ F:	package/fwup/
 N:	Yair Ben Avraham <yairba@protonmail.com>
 F:	package/gloox/
 
+N:	Xavier Roumegue <xroumegue@gmail.com>
+F:	configs/imx8mmevk_defconfig
+
 N:	Yann E. MORIN <yann.morin.1998@free.fr>
 F:	board/friendlyarm/nanopi-neo/
 F:	configs/nanopi_neo_defconfig
