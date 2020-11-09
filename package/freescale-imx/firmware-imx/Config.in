@@ -81,6 +81,9 @@ config BR2_PACKAGE_FIRMWARE_IMX_DMEM_LEN
 	help
 	  The DMEM firmware will be padded to this length
 
+config BR2_PACKAGE_FIRMWARE_IMX_DDR_FW_MULTIPLE
+	bool
+
 endif # BR2_PACKAGE_FIRMWARE_IMX_NEEDS_DDR_FW
 
 endif # BR2_PACKAGE_FIRMWARE_IMX
